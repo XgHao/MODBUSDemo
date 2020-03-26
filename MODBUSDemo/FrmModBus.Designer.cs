@@ -31,6 +31,7 @@
             this.btn_Connect = new System.Windows.Forms.Button();
             this.btn_ReadReg = new System.Windows.Forms.Button();
             this.lb_Mesage = new System.Windows.Forms.ListBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btn_Connect
@@ -62,17 +63,28 @@
             this.lb_Mesage.Size = new System.Drawing.Size(455, 304);
             this.lb_Mesage.TabIndex = 2;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(144, 157);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(41, 12);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "label1";
+            // 
             // FrmModBus
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(645, 510);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lb_Mesage);
             this.Controls.Add(this.btn_ReadReg);
             this.Controls.Add(this.btn_Connect);
             this.Name = "FrmModBus";
             this.Text = "Form1";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -81,6 +93,7 @@
         private System.Windows.Forms.Button btn_Connect;
         private System.Windows.Forms.Button btn_ReadReg;
         private System.Windows.Forms.ListBox lb_Mesage;
+        private System.Windows.Forms.Label label1;
     }
 }
 

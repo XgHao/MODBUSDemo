@@ -1,4 +1,5 @@
-﻿using DAL;
+﻿using Common;
+using DAL;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace MODBUSDemo
 {
@@ -43,18 +45,17 @@ namespace MODBUSDemo
         /// <param name="e"></param>
         private void Btn_ReadReg_Click(object sender, EventArgs e)
         {
+            modbusObj.tokenSource = new CancellationTokenSource();
             modbusObj?.ReadKeepReg(1, 0, 10);
             Task.Run(() =>
             {
-                while (true)
+                //如果取消了，说明接受完成
+                while (!modbusObj.tokenSource.IsCancellationRequested)
                 {
-                    if (modbusObj.IsFinish)
-                    {
-                        lb_Mesage.Items.Clear();
-
-                    }
+                    Thread.Sleep(50);
                 }
-            });
+                lb_Mesage.RefreshItemWithInvoke(modbusObj.StringListFromHexStr(3, 2));
+            }, modbusObj.tokenSource.Token);   
         }
     }
 }
