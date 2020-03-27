@@ -57,5 +57,78 @@ namespace MODBUSDemo
                 lb_Mesage.RefreshItemWithInvoke(modbusObj.StringListFromHexStr(3, 2));
             }, modbusObj.tokenSource.Token);   
         }
+
+        /// <summary>
+        /// 读取输出线圈
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_ReadOutCoil_Click(object sender, EventArgs e)
+        {
+            modbusObj.tokenSource = new CancellationTokenSource();
+            modbusObj?.ReadOutputStatus(1, 0, 10);
+            Task.Run(() =>
+            {
+                //如果取消了，说明接受完成
+                while (!modbusObj.tokenSource.IsCancellationRequested)
+                {
+                    Thread.Sleep(50);
+                }
+                lb_Mesage.RefreshItemWithInvoke(modbusObj.StringListFromHexStr(3, 2));
+            }, modbusObj.tokenSource.Token);
+        }
+
+        /// <summary>
+        /// 读取输入线圈
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_ReadInCoil_Click(object sender, EventArgs e)
+        {
+            modbusObj.tokenSource = new CancellationTokenSource();
+            modbusObj?.ReadInputStatus(1, 0, 10);
+            Task.Run(() =>
+            {
+                //如果取消了，说明接受完成
+                while (!modbusObj.tokenSource.IsCancellationRequested)
+                {
+                    Thread.Sleep(50);
+                }
+                lb_Mesage.RefreshItemWithInvoke(modbusObj.StringListFromHexStr(3, 2));
+            }, modbusObj.tokenSource.Token);
+        }
+
+        /// <summary>
+        /// 强制线圈
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_FroceCoil_Click(object sender, EventArgs e)
+        {
+            string msg = modbusObj.ForceCoil(1, 0, true) ? "强制成功" : "强制失败";
+            MessageBox.Show(msg);
+        }
+
+        /// <summary>
+        /// 写入单寄存器
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_WriteSingleReg_Click(object sender, EventArgs e)
+        {
+            string msg = modbusObj.PreSetKeepReg(1, 0, 32) ? "强制成功" : "强制失败";
+            MessageBox.Show(msg);
+        }
+
+        /// <summary>
+        /// 写入双寄存器
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_WriteDoubleReg_Click(object sender, EventArgs e)
+        {
+            string msg = modbusObj.PreSetFloatKeepReg(1, 0, 123.33f) ? "强支成功" : "强制失败";
+            MessageBox.Show(msg);
+        }
     }
 }
