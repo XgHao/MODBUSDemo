@@ -41,20 +41,18 @@ namespace Common
         /// </summary>
         /// <param name="listBox"></param>
         /// <param name="lists"></param>
-        public static void RefreshItemWithInvoke(this ListBox listBox, List<string> lists)
+        public static void RefreshItemWithInvoke(this ListBox listBox, List<byte> lists)
         {
             if (listBox.InvokeRequired)
             {
-                listBox.Invoke(new Action<List<string>>(items =>
+                listBox.Invoke(new Action<List<byte>>(items =>
                 {
-                    listBox.Items.Clear();
-                    listBox.Items.AddRange(items.ToArray());
+                    listBox.DataSource = items;
                 }), lists);
                 return;
             }
 
-            listBox.Items.Clear();
-            listBox.Items.AddRange(lists.ToArray());
+            listBox.DataSource = lists;
         }
 
         /// <summary>
@@ -64,17 +62,13 @@ namespace Common
         /// <returns></returns>
         public static byte[] GetContextByArrbyte(this List<string> strs)
         {
-            int head = strs.IndexOf("**头部**");
+            int head = strs.IndexOf("**正文**") + 1;
             int end = strs.LastIndexOf("**校验码**");
             string[] strArr = strs.Skip(head).Take(end - head).ToArray();
             byte[] bytes = new byte[strArr.Length];
             for (int i = 0; i < strArr.Length; i++)
             {
-                //转换失败
-                if (!byte.TryParse(strArr[i], out bytes[i])) 
-                {
-                    throw new Exception("List<string>转byte[]失败");
-                }
+                bytes[i] = Convert.ToByte(strArr[i], 16);
             }
             return bytes;
         } 

@@ -46,16 +46,7 @@ namespace MODBUSDemo
         private void Btn_ReadReg_Click(object sender, EventArgs e)
         {
             modbusObj.tokenSource = new CancellationTokenSource();
-            modbusObj?.ReadKeepReg(1, 0, 10);
-            Task.Run(() =>
-            {
-                //如果取消了，说明接受完成
-                while (!modbusObj.tokenSource.IsCancellationRequested)
-                {
-                    Thread.Sleep(50);
-                }
-                lb_Mesage.RefreshItemWithInvoke(modbusObj.StringListFromHexStr(3, 2));
-            }, modbusObj.tokenSource.Token);   
+            lb_Mesage.DataSource = modbusObj?.ReadKeepReg(1, 0, 10);
         }
 
         /// <summary>
@@ -66,16 +57,7 @@ namespace MODBUSDemo
         private void Btn_ReadOutCoil_Click(object sender, EventArgs e)
         {
             modbusObj.tokenSource = new CancellationTokenSource();
-            modbusObj?.ReadOutputStatus(1, 0, 10);
-            Task.Run(() =>
-            {
-                //如果取消了，说明接受完成
-                while (!modbusObj.tokenSource.IsCancellationRequested)
-                {
-                    Thread.Sleep(50);
-                }
-                lb_Mesage.RefreshItemWithInvoke(modbusObj.StringListFromHexStr(3, 2));
-            }, modbusObj.tokenSource.Token);
+            lb_Mesage.DataSource = modbusObj?.ReadOutputStatus(1, 0, 10);
         }
 
         /// <summary>
@@ -86,16 +68,7 @@ namespace MODBUSDemo
         private void Btn_ReadInCoil_Click(object sender, EventArgs e)
         {
             modbusObj.tokenSource = new CancellationTokenSource();
-            modbusObj?.ReadInputStatus(1, 0, 10);
-            Task.Run(() =>
-            {
-                //如果取消了，说明接受完成
-                while (!modbusObj.tokenSource.IsCancellationRequested)
-                {
-                    Thread.Sleep(50);
-                }
-                lb_Mesage.RefreshItemWithInvoke(modbusObj.StringListFromHexStr(3, 2));
-            }, modbusObj.tokenSource.Token);
+            lb_Mesage.DataSource = modbusObj?.ReadInputStatus(1, 0, 10);
         }
 
         /// <summary>

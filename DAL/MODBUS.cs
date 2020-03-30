@@ -208,6 +208,7 @@ namespace DAL
             {
                 throw;
             }
+            Thread.Sleep(100);
             return ResByte;
         }
 
@@ -225,8 +226,8 @@ namespace DAL
             //1.拼接报文
             SendCommand[0] = (byte)iDevAdd;
             SendCommand[1] = 0x06;
-            SendCommand[2] = (byte)((iDevAdd - iAddress % 256) / 256);
-            SendCommand[3] = (byte)(iDevAdd % 256);
+            SendCommand[2] = (byte)((iAddress - iAddress % 256) / 256);
+            SendCommand[3] = (byte)(iAddress % 256);
             SendCommand[4] = (byte)((SetValue - SetValue % 256) / 256);
             SendCommand[5] = (byte)(SetValue % 256);
             Algorithm.Crc16(SendCommand, 6, out SendCommand[6],out SendCommand[7]);
@@ -240,6 +241,7 @@ namespace DAL
                 return false;
             }
             //3.解析报文
+            Thread.Sleep(100);
             var ResByte = StringListFromHexStr(0, 0).GetContextByArrbyte();
             return ResByte.ByteArrIsEqual(SendCommand);
         }
@@ -278,6 +280,7 @@ namespace DAL
             {
                 return false;
             }
+            Thread.Sleep(100);
             //3.解析报文
             byte[] ResByte = StringListFromHexStr(0, 0).GetContextByArrbyte();
             //解析报文的校验码
@@ -296,7 +299,7 @@ namespace DAL
         public byte[] ReadOutputStatus(int iDevAdd,int iAddress,int iLength)
         {
             byte[] SendCommand = new byte[8];
-            CurrentAddr = iAddress;
+            CurrentAddr = iDevAdd;
             iMBitLen = (int)Math.Ceiling(((decimal)iLength) / 8);
 
             //1.拼接报文
@@ -316,6 +319,7 @@ namespace DAL
             {
                 return null;
             }
+            Thread.Sleep(100);
             return StringListFromHexStr(3, 2).GetContextByArrbyte();
         }
 
@@ -329,7 +333,7 @@ namespace DAL
         public byte[] ReadInputStatus(int iDevAdd, int iAddress, int iLength)
         {
             byte[] SendCommand = new byte[8];
-            CurrentAddr = iAddress;
+            CurrentAddr = iDevAdd;
             iMBitLen = (int)Math.Ceiling(((decimal)iLength) / 8);
 
             //1.拼接报文
@@ -349,6 +353,7 @@ namespace DAL
             {
                 return null;
             }
+            Thread.Sleep(100);
             return StringListFromHexStr(3, 2).GetContextByArrbyte();
         }
 
@@ -366,7 +371,7 @@ namespace DAL
             SendCommand[0] = (byte)iDevAdd;
             SendCommand[1] = 0x05;
             SendCommand[2] = (byte)((iAddress - iAddress % 256) / 256);
-            SendCommand[3] = (byte)(iDevAdd % 256);
+            SendCommand[3] = (byte)(iAddress % 256);
             SendCommand[4] = SetValue ? (byte)0xFF : (byte)0x00;
             SendCommand[5] = 0x00;
             Algorithm.Crc16(SendCommand, 6,out SendCommand[6],out SendCommand[7]);
@@ -379,7 +384,7 @@ namespace DAL
             {
                 return false;
             }
-
+            Thread.Sleep(100);
             return SendCommand.ByteArrIsEqual(StringListFromHexStr(0, 0).GetContextByArrbyte());
         }
 
@@ -391,14 +396,14 @@ namespace DAL
         public List<string> StringListFromHexStr(int start, int end)
         {
             //分隔成数组
-            string[] strArray = strUpData.Trim().Split(' ');
+            string[] strArray = strUpData.TrimStart().Split(' ');
 
             string[] res = new string[strArray.Length + 3];
             res[0] = "**头部**";
             Array.Copy(strArray, 0, res, 1, start);
-            res[4] = "**正文**";
+            res[start + 1] = "**正文**";
             Array.Copy(strArray, start, res, start + 2, strArray.Length - start - end);
-            res[25] = "**校验码**";
+            res[res.Length -1 - end] = "**校验码**";
             Array.Copy(strArray, strArray.Length - end, res, res.Length - end, end);
             return res.ToList(); 
         }
